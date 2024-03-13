@@ -25,10 +25,11 @@ with dpg.window(label="Main Viewport", width=525, height=705, pos=(0,0)):
      dpg.add_image("texture_tag")
      dpg.add_text("Nothing")
 
-renderer_thread = vp.ViewportRendererThread(update_viewport)
+renderer_thread = vp.ViewportRendererThread(update_viewport, "mediapipe")
 renderer_thread.start()
 
+dpg.create_viewport(title='Cascade Workbench', width=1000, height=1000)
 dpg.show_viewport()
+dpg.maximize_viewport()
 dpg.start_dearpygui()
 dpg.destroy_context()
-
