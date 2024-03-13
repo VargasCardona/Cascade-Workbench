@@ -1,12 +1,12 @@
 
-# Cascade Workbench
+# Computer Vision Workbench
 
-Minimalistic graphical interface for training and visualizing Haar Cascade models and others.
+Minimalistic graphical interface for training and visualizing multiple object detection algorithms.
 
 ## Features
 
 - Visualization of Haar Cascade models
-- Visualization of mediapipe models
+- Visualization of pre trained mediapipe models
 - Minimalistic user interface
 
 
