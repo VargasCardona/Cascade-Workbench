@@ -21,11 +21,10 @@ for i in range(0, 100 * 100):
 with dpg.texture_registry(show=False):
    dpg.add_raw_texture(640, 480, texture_data, tag="texture_tag", format=dpg.mvFormat_Float_rgb)
 
-with dpg.window(label="Main Viewport", width=525, height=705, pos=(0,0)):
+with dpg.window(label="Main Viewport", width=525, height=518, pos=(500,100)):
      dpg.add_image("texture_tag")
-     dpg.add_text("Nothing")
 
-renderer_thread = vp.ViewportRendererThread(update_viewport, "mediapipe")
+renderer_thread = vp.ViewportRendererThread(update_viewport, "cascade")
 renderer_thread.start()
 
 dpg.create_viewport(title='Cascade Workbench', width=1000, height=1000)

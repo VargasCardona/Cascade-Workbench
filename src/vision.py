@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import threading
+from pathlib import Path
 
 class ViewportRendererThread(threading.Thread):
     def __init__(self, frame_callback, processing_type):
@@ -25,19 +26,26 @@ class ViewportRendererThread(threading.Thread):
               processed_frame = self.process_cascade(cap)
 
              self.frame_callback(processed_frame)
+
     def process_cascade(self, frame):
-        default_detector = cv2.CascadeClassifier('trash.xml')
+        model_path = Path("models/haarcascade_frontalface_default.xml").resolve()
+        default_detector = cv2.CascadeClassifier(str(model_path))
         _, image = frame.read()
         image = cv2.flip(image, 1)
 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        detections = default_detector.detectMultiScale(image,
-            scaleFactor = 5,
-            minNeighbors = 91)
+        detections = default_detector.detectMultiScale(gray_image,
+            scaleFactor = 1.8,
+            minNeighbors = 5,
+            minSize = (10,10))
 
         for (x,y,w,h) in detections:
-            cv2.rectangle(frame, (x,y),(x+w,y+h), (0, 255, 0), 2)
+            x_coord = int((x+x+w) / 2)
+            y_coord = int((y+y+h) / 2)
+
+            cv2.rectangle(image, (x,y),(x+w,y+h), (0, 0, 255), 2)
+            cv2.putText(image, "Detecting", (x_coord-130,y_coord+155), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
 
         return self.texture_convertion(image)
 
