@@ -1,12 +1,12 @@
 
 # Cascade Workbench
 
-Minimalistic graphical interface for training and visualizing Haar Cascade models.
+Minimalistic graphical interface for training and visualizing Haar Cascade models and others.
 
 ## Features
 
-- Visualize Haar Cascade models
-- Visualize mediapipe models
+- Visualization of Haar Cascade models
+- Visualization of mediapipe models
 - Minimalistic user interface
 
 
