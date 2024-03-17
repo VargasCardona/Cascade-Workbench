@@ -5,31 +5,22 @@ import threading
 from pathlib import Path
 
 class ViewportRendererThread(threading.Thread):
-    def __init__(self, frame_callback, processing_type):
+    def __init__(self, frame_callback, model_path):
         super().__init__()
         self.frame_callback = frame_callback
-        self.processing_type = processing_type
+        self.model_path = model_path
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_hands = mp.solutions.hands
         self.stopped = False
 
-        self.MEDIAPIPE_PROCESSING = "mediapipe"
-        self.CASCADE_PROCESSING = "cascade"
-
     def run(self):
-         cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+         cap = cv2.VideoCapture(0)
          while not self.stopped:
-             processed_frame = None
-             if self.processing_type == self.MEDIAPIPE_PROCESSING:
-              processed_frame = self.process_mediapipe(cap)
-             elif self.processing_type == self.CASCADE_PROCESSING:
               processed_frame = self.process_cascade(cap)
-
-             self.frame_callback(processed_frame)
+              self.frame_callback(processed_frame)
 
     def process_cascade(self, frame):
-        model_path = Path("models/haarcascade_frontalface_default.xml").resolve()
-        default_detector = cv2.CascadeClassifier(str(model_path))
+        default_detector = cv2.CascadeClassifier(str(self.model_path))
         _, image = frame.read()
         image = cv2.flip(image, 1)
 
@@ -48,26 +39,6 @@ class ViewportRendererThread(threading.Thread):
             cv2.putText(image, "Detecting", (x_coord-130,y_coord+155), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
 
         return self.texture_convertion(image)
-
-    def process_mediapipe(self, frame):
-        with self.mp_hands.Hands(
-                static_image_mode = False,
-                max_num_hands = 1,
-                min_detection_confidence=0.5) as hands:
-
-         _, image = frame.read()
-         image = cv2.flip(image, 1)
-         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
- 
-         results = hands.process(image_rgb)
-  
-         if results.multi_hand_landmarks is not None:
-             for hand_landmarks in results.multi_hand_landmarks:
-                 self.mp_drawing.draw_landmarks(image, hand_landmarks, self.mp_hands.HAND_CONNECTIONS,
-                 self.mp_drawing.DrawingSpec(color=(0,0,255),thickness=-1, circle_radius=5),
-                 self.mp_drawing.DrawingSpec(color=(0,40,255),thickness=2,))
-
-         return self.texture_convertion(image)
 
     def texture_convertion(self, image):
          viewport = np.flip(image, 2)
