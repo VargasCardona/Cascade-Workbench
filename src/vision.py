@@ -1,3 +1,4 @@
+from exceptions import exceptions
 import cv2
 import numpy as np
 import threading
@@ -24,6 +25,8 @@ class ViewportRendererThread(threading.Thread):
             print(self.media_path)
         elif self.input_type == self.WEBCAM_INPUT:
             cap = cv2.VideoCapture(0)
+        else:
+            raise exceptions.EmptyInputException()
 
         processed_frame, width, height = self.process_cascade(cap)
         self.frame_dimentions(width, height)

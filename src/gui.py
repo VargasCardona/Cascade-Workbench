@@ -5,6 +5,14 @@ dpg.create_context()
 dpg.setup_dearpygui()
 dpg.create_viewport(title='Cascade Workbench',height = 750, width = 540)
 
+
+def create_dialog(text: str):
+       with dpg.window(label="Error", modal=True, show=True, tag="dialog", pos=((dpg.get_viewport_width() - 50) //2 - 20, dpg.get_viewport_height() - 50 //2), height=50):
+           dpg.add_text(text)
+           dpg.add_separator()
+           with dpg.group(horizontal=True):
+              dpg.add_button(label="OK", width=90, callback=lambda: dpg.delete_item("dialog"))
+
 def callback(sender, app_data):
     global model_path
     global model_name
@@ -38,9 +46,19 @@ def callback(sender, app_data):
             dpg.configure_item("model_selection", height=251)
 
     elif sender == "view_model":
-        dpg.configure_item("model_selection", show = False)
+        if model_path == "":
+            create_dialog("Missing Model Path")
+            return
+        if input_method == "":
+            create_dialog("Missing Input method")
+            return
+        if input_method == "Media" and media_path == "":
+            create_dialog("Missing Media Path")
+            return
+
         renderer_thread = vp.ViewportRendererThread(update_viewport, get_viewport_dimentions, input_method, media_path, model_path)
         renderer_thread.start()
+        dpg.configure_item("model_selection", show = False)
                
 def update_viewport(frame):
   dpg.set_value("viewport", frame)
