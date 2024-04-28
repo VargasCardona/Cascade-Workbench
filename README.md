@@ -68,7 +68,7 @@ Multithreading to avoid interrupting the graphical user interface while frames g
 └─ workbench_run.bat
 ```
 > [!NOTE]  
-> The `models/` and `media/` directory contain some basic Haar Cascade models and media for quick testing.
+> The `models/` and `media/` directories contain some basic Haar Cascade models and media for quick testing.
 
 ## Tech Stack
 
