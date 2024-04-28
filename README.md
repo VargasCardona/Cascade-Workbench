@@ -26,7 +26,7 @@ Minimalistic graphical interface that enables the user to visualize and fine-tun
 
 Multithreading to avoid interrupting the graphical user interface while frames get processed.
 
-## Directory Struture
+## Directory Structure
 
 ```
 ├─ LICENSE
