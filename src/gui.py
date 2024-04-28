@@ -77,12 +77,12 @@ def get_viewport_dimentions(height, width):
                dpg.add_text("Current Model: ")
                dpg.add_text(model_name)
 
-width, height, channels, data = dpg.load_image("media/haar.png")
 model_path, model_name = "", ""
 media_path, media_name = "", ""
 viewport_height, viewport_width = 0, 0
 input_method = ""
 texture_data = []
+
 for i in range(0, 100 * 100):
     texture_data.append(255 / 255)
     texture_data.append(0)
@@ -90,7 +90,7 @@ for i in range(0, 100 * 100):
     texture_data.append(255 / 255)
 
 with dpg.texture_registry(show=False, tag="registry"):
-   dpg.add_raw_texture(260, 53, data, tag="logo")
+   dpg.add_raw_texture(260, 53, texture_data, tag="logo")   
 
 with dpg.window(tag="model_selection", label="Cascade Workbench", no_close=True, no_collapse=True, no_resize=True, width=276, height=210, pos=(820, 420)):
     with dpg.group(horizontal=True):

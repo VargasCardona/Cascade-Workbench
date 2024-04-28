@@ -2,6 +2,7 @@ from exceptions import exceptions
 import cv2
 import numpy as np
 import threading
+import time
 
 class ViewportRendererThread(threading.Thread):
     def __init__(self, frame_callback, frame_dimentions, input_type, media_path, model_path):
@@ -48,10 +49,11 @@ class ViewportRendererThread(threading.Thread):
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         #cv2.putText(image, str(fps), (20,20), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
+        #cv2.putText(image, str(fps), (20,20), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
         detections = default_detector.detectMultiScale(gray_image,
-            scaleFactor = 5,
-            minNeighbors = 91,
-            minSize = (10,10))
+            scaleFactor = 5.1,
+            minNeighbors = 300,
+            minSize = (50,50))
 
         for (x,y,w,h) in detections:
             x_coord = int((x+x+w) / 2)
@@ -60,6 +62,7 @@ class ViewportRendererThread(threading.Thread):
             cv2.rectangle(image, (x,y),(x+w,y+h), (0, 0, 255), 2)
             #cv2.putText(image, "Detecting", (x_coord-130,y_coord+155), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
 
+        time.sleep(0.05)
         return self.texture_convertion(image)
 
     def texture_convertion(self, image):
