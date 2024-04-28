@@ -7,10 +7,11 @@ dpg.create_viewport(title='Cascade Workbench',height = 750, width = 540)
 
 
 def create_dialog(text: str):
-       with dpg.window(label="Error", modal=True, show=True, tag="dialog", pos=((dpg.get_viewport_width() - 50) //2 - 20, dpg.get_viewport_height() - 50 //2), height=50):
+       with dpg.window(label="Error", modal=True, show=True, tag="dialog", pos=((dpg.get_viewport_width() - 150) // 2, (dpg.get_viewport_height() - 50 ) // 2), height=30):
            dpg.add_text(text)
            dpg.add_separator()
            with dpg.group(horizontal=True):
+              dpg.add_spacer(width=10)
               dpg.add_button(label="OK", width=90, callback=lambda: dpg.delete_item("dialog"))
 
 def callback(sender, app_data):
@@ -68,6 +69,7 @@ def get_viewport_dimentions(height, width):
     viewport_height = height
     viewport_width = width
     dpg.add_raw_texture(width, height, texture_data, tag="viewport", format=dpg.mvFormat_Float_rgb, parent="registry")
+    dpg.show_metrics()
 
     with dpg.window(tag="main_viewport", label="Main Viewport", width=width+15, height=height+60, pos=(650,200), show=True):
            dpg.add_image("viewport")

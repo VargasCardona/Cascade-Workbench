@@ -25,8 +25,10 @@ for img in neg_imgs:
     samples.append(sample)
     labels.append(0)
 
-samples = np.array(samples)
+samples = np.array(samples).squeeze()
 labels = np.array(labels)
+print(samples[0].shape)
+len(samples)
 dataset = cv2.ml.TrainData_create(samples, cv2.ml.ROW_SAMPLE, labels)
 
 parameters = cv2.CascadeClassifier()

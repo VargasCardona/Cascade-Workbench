@@ -44,11 +44,13 @@ class ViewportRendererThread(threading.Thread):
             height, width, _ = image.shape
             image = cv2.resize(image, (int(width * ratio), int(height * ratio)), interpolation=cv2.INTER_AREA)
 
+        #fps = frame.get(cv2.CAP_PROP_FPS)
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+        #cv2.putText(image, str(fps), (20,20), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
         detections = default_detector.detectMultiScale(gray_image,
-            scaleFactor = 1.8,
-            minNeighbors = 5,
+            scaleFactor = 5,
+            minNeighbors = 91,
             minSize = (10,10))
 
         for (x,y,w,h) in detections:
@@ -56,7 +58,7 @@ class ViewportRendererThread(threading.Thread):
             y_coord = int((y+y+h) / 2)
 
             cv2.rectangle(image, (x,y),(x+w,y+h), (0, 0, 255), 2)
-            cv2.putText(image, "Detecting", (x_coord-130,y_coord+155), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
+            #cv2.putText(image, "Detecting", (x_coord-130,y_coord+155), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
 
         return self.texture_convertion(image)
 
