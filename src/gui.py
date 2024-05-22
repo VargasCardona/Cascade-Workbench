@@ -3,6 +3,7 @@ import src.vision as vp
 
 dpg.create_context()
 dpg.setup_dearpygui()
+rendered_thread = None
 dpg.create_viewport(title='Cascade Workbench',height = 750, width = 540)
 
 
@@ -20,6 +21,7 @@ def callback(sender, app_data):
     global media_path
     global media_name
     global input_method
+    global renderer_thread
     
     if sender == "model_browser":
         path = app_data['selections']
@@ -60,7 +62,16 @@ def callback(sender, app_data):
         renderer_thread = vp.ViewportRendererThread(update_viewport, get_viewport_dimentions, input_method, media_path, model_path)
         renderer_thread.start()
         dpg.configure_item("model_selection", show = False)
-               
+
+    elif sender == "scale_slider":
+        renderer_thread.scale_factor = app_data
+    elif sender == "neighbors_slider":
+        renderer_thread.neighbors_minimum = app_data
+    elif sender == "input_x":
+        renderer_thread.detection_x = app_data
+    elif sender == "input_y":
+        renderer_thread.detection_y = app_data
+
 def update_viewport(frame):
   dpg.set_value("viewport", frame)
 
@@ -71,11 +82,24 @@ def get_viewport_dimentions(height, width):
     dpg.add_raw_texture(width, height, texture_data, tag="viewport", format=dpg.mvFormat_Float_rgb, parent="registry")
     dpg.show_metrics()
 
-    with dpg.window(tag="main_viewport", label="Main Viewport", width=width+15, height=height+60, pos=(650,200), show=True):
+    with dpg.window(tag="main_viewport", label="Main Viewport", no_resize=True, width=width+15, height=height+130, pos=(650,200), show=True):
            dpg.add_image("viewport")
            with dpg.group(horizontal=True):
                dpg.add_text("Current Model: ")
                dpg.add_text(model_name)
+
+           with dpg.group(horizontal=True):
+               dpg.add_text("Scale Factor ")
+               dpg.add_slider_float(tag="scale_slider", default_value=5.1, max_value=10, min_value = 1.1, callback=callback)
+
+           with dpg.group(horizontal=True):
+               dpg.add_text("Minimum Neighbors ")
+               dpg.add_slider_int(tag="neighbors_slider", default_value=300, max_value=500, callback=callback)
+
+           with dpg.group(horizontal=True):
+               dpg.add_text("Minimum Size (Pixels) ")
+               dpg.add_input_int(tag = "input_x", label="x", default_value=50, width=100, min_value=1, min_clamped=True, callback=callback)
+               dpg.add_input_int(tag = "input_y", width=100, default_value=50, min_value=1, min_clamped=True, callback=callback)
 
 model_path, model_name = "", ""
 media_path, media_name = "", ""

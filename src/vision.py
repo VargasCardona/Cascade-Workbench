@@ -16,6 +16,11 @@ class ViewportRendererThread(threading.Thread):
         self.height = 0
         self.stopped = False
 
+        self.scale_factor = 5.1
+        self.neighbors_minimum = 300
+        self.detection_x = 50
+        self.detection_y = 50
+
         self.MEDIA_INPUT = "Media"
         self.WEBCAM_INPUT = "Webcam"
 
@@ -37,6 +42,7 @@ class ViewportRendererThread(threading.Thread):
               self.frame_callback(processed_frame)
 
     def process_cascade(self, frame):
+        global scale_factor
         default_detector = cv2.CascadeClassifier(str(self.model_path))
         _, image = frame.read()
         image = cv2.flip(image, 1)
@@ -51,9 +57,9 @@ class ViewportRendererThread(threading.Thread):
         #cv2.putText(image, str(fps), (20,20), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
         #cv2.putText(image, str(fps), (20,20), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 1)
         detections = default_detector.detectMultiScale(gray_image,
-            scaleFactor = 5.1,
-            minNeighbors = 300,
-            minSize = (50,50))
+            scaleFactor = self.scale_factor,
+            minNeighbors = self.neighbors_minimum,
+            minSize = (self.detection_x, self.detection_y))
 
         for (x,y,w,h) in detections:
             x_coord = int((x+x+w) / 2)
@@ -75,4 +81,3 @@ class ViewportRendererThread(threading.Thread):
 
     def stop(self):
          self.stopped = True
-    
